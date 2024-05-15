@@ -18,6 +18,8 @@ import view.components.GridCard;
 import view.components.Mybutton;
 import view.components.Myframe;
 
+import model.Parc;
+
 public class HomePage extends Myframe {
     public HomePage() {
         super("HomePage",500,1200);
@@ -48,7 +50,7 @@ public class HomePage extends Myframe {
         louerScooter.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("hello everybody");
+                // insert la page qui vas afficher tous les scooters dans le parc
             }
             
         });
@@ -58,8 +60,6 @@ public class HomePage extends Myframe {
             @Override
             public void actionPerformed(ActionEvent e){
                 RetournerScooter retourner = new RetournerScooter();
-                retourner.setVisible(true);
-                retourner.show();
             }
         });
         mainShow.add(retournerScooter);
@@ -68,8 +68,6 @@ public class HomePage extends Myframe {
             @Override
             public void actionPerformed(ActionEvent e){
                 ParcdeScooter parcView = new ParcdeScooter();
-                parcView.setVisible(true);
-                parcView.show();
             }
         });
         mainShow.add(afficherParc);
@@ -77,6 +75,5 @@ public class HomePage extends Myframe {
         this.add(mainShow,BorderLayout.CENTER);
         this.add(footer,BorderLayout.SOUTH);
         this.add(heading, BorderLayout.NORTH);
-        setVisible(true);
     }
 }

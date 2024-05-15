@@ -4,7 +4,6 @@ import java.util.*;
 
 public class Scooter {
 
-
     public int id;
     public String modele;
     public float kilometrage;
@@ -28,6 +27,7 @@ public class Scooter {
     public Parc getParc() {
         return parc;
     }
+
     public void addLocation (Location location){
         listLocation.add(location);
     }
@@ -37,8 +37,9 @@ public class Scooter {
     }
     
     public boolean isFree(LocalDate date_debut,LocalDate date_fin){
+
         for (Location element : listLocation) {
-            if(element.isIntersect(date_debut, date_fin)){
+            if((element.getDateDebut().isAfter(date_debut)&&element.getDateDebut().isBefore(date_fin)) || (element.getDateFin().isAfter(date_debut)&&element.getDateFin().isBefore(date_fin))){
                 return false;
             }
         }

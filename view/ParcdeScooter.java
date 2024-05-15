@@ -18,8 +18,12 @@ import view.components.HeadingText;
 import view.components.Mybutton;
 import view.components.Myframe;
 
+import model.Parc;
+
 public class ParcdeScooter extends Myframe {
-    ParcdeScooter() {
+    Parc currentParc = new Parc(100);
+
+    public ParcdeScooter() {
         super("Parc de Scooter", 500, 1200);
         JPanel header = new JPanel();
         HeadingText headingText = new HeadingText("Saisir le parc des Scooters");
@@ -30,15 +34,48 @@ public class ParcdeScooter extends Myframe {
         header.add(headingText,BorderLayout.CENTER);
 
         JPanel mainHome = new JPanel();
-        mainHome.setLayout(new GridLayout(4, 1,20,20));
+        mainHome.setLayout(new GridLayout(5, 1,20,20));
 
         JPanel container1 = new JPanel();
         container1.setLayout(new GridLayout(2,1));
         JPanel container2 = new JPanel();
         container2.setLayout(new GridLayout(2,1));
+        JPanel container3 = new JPanel();
+        container3.setLayout(new GridLayout(2,1));
 
         Mybutton visualiserLocation = new Mybutton("Visualiser", Color.white, Color.BLUE);
+        visualiserLocation.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                ListeDeScootersEnLocation listeDeScootersEnLocationPage = new ListeDeScootersEnLocation(currentParc);
+            }
+        });
+
+
         Mybutton visualiserDispo = new Mybutton("Visualiser", Color.WHITE, Color.BLUE);
+        visualiserDispo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                ListeDesScootersDisponibles listeDesScootersDisponiblesPage = new ListeDesScootersDisponibles(currentParc);
+            }
+        });
+
+        Mybutton ajouterScooterBtn = new Mybutton("Ajouter un scooter", Color.white, Color.BLUE);
+        ajouterScooterBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                AjouterScooterPage ajouterScooterPage = new AjouterScooterPage();
+            }
+        });
+
+        Mybutton supprimerScooterBtn = new Mybutton("Supprimer un scooter", Color.white, Color.RED);
+        supprimerScooterBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                SupprimerScooterPage supprimerScooterPage = new SupprimerScooterPage();
+            }
+        });
+
         visualiserDispo.setPreferredSize(new Dimension(200,150));
         visualiserLocation.setPreferredSize(new Dimension(200,150));
 
@@ -54,6 +91,8 @@ public class ParcdeScooter extends Myframe {
 
         DataDiv moyenKilo = new DataDiv("le Kilometrage Moyen", "750.2548");
 
+        container3.add(ajouterScooterBtn);
+        container3.add(supprimerScooterBtn);
 
 
 
@@ -61,6 +100,7 @@ public class ParcdeScooter extends Myframe {
         mainHome.add(container1);
         mainHome.add(container2);
         mainHome.add(moyenKilo);
+        mainHome.add(container3);
         
         this.add(header,BorderLayout.NORTH);
         this.add(mainHome,BorderLayout.CENTER);

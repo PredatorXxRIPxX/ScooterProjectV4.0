@@ -10,54 +10,58 @@ import java.awt.FlowLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.LayoutManager;
+
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 
 public class RetournerScooter extends Myframe {
-    RetournerScooter() {
-        super("Retourner Scooter", 500, 1200);
+    public RetournerScooter() {
+        super("Retourner Scooter",700,400);
         this.setLayout(new BorderLayout());
+        this.setResizable(false);
+        LayoutManager layout = new FlowLayout(FlowLayout.CENTER, 20,5);
+        LayoutManager innerLayout = new GridLayout(8,1);
+
+        JPanel tmp1 = new JPanel();
+        tmp1.setLayout(innerLayout);
+        MytextField nomField = new MytextField("nom", 20, 200,false);
+        MytextField prenomField = new MytextField("prenom", 20, 200, false);
+        MytextField telephoneField = new MytextField("tel", 20, 200, false);
+        MytextField dateRetour = new MytextField("date retour", 20, 200, false);
+
+        MytextField scooterIdField = new MytextField("id", 20, 200,false);
+        MytextField scooterKiloField = new MytextField("kilo", 20, 200, false);
+
         
-        JLabel heading = new JLabel("Retourner Scooter");
-        heading.setFont(new Font("Arial", Font.BOLD, 18));
+        this.add(new HeadingText("Informations locataire"),BorderLayout.NORTH);
+        tmp1.add(nomField);
+        tmp1.add(prenomField);
+        tmp1.add(telephoneField);
+        tmp1.add(dateRetour);
+        tmp1.add(new HeadingText("Informations Scooter"),BorderLayout.NORTH);
+        tmp1.add(scooterIdField);
+        tmp1.add(scooterKiloField);
 
-        Mybutton exitBtn = new Mybutton("annuler", Color.white, Color.red);
-        Mybutton valider = new Mybutton("valider", Color.white, Color.blue);
-
-        JPanel footer = new JPanel();
-        footer.setLayout(new FlowLayout());
-        footer.add(exitBtn);
-        footer.add(valider);
-
-        JPanel mainPanel = new JPanel(new GridLayout(3, 1));
-        
-        JPanel headingDiv = new JPanel();
-        headingDiv.add(new HeadingText("Information Locataire"));
-
-        JPanel secondDiv = new JPanel();
-        secondDiv.setLayout(new GridLayout(3, 2, 10, 20));
-        
-        MytextField nomField = new MytextField("Nom", 80, 120, false);
-        MytextField prenomField = new MytextField("Prenom", 80, 120, false);
-        MytextField telephoneField = new MytextField("Telephone", 80, 120, true);
-        MytextField dateRetour = new MytextField("Date Retour", 80, 120, false);
-        MytextField idScooterField = new MytextField("ID Scooter", 80, 120, true);
-        MytextField kilometrageField = new MytextField("Kilometrage", 80, 120, true);
-
-        secondDiv.add(nomField);
-        secondDiv.add(prenomField);
-        secondDiv.add(telephoneField);
-        secondDiv.add(dateRetour);
-        secondDiv.add(idScooterField);
-        secondDiv.add(kilometrageField);
-
-        mainPanel.add(headingDiv);
-        mainPanel.add(secondDiv);
-
-        this.add(mainPanel, BorderLayout.CENTER);
-        this.add(heading, BorderLayout.NORTH);
-        this.add(footer, BorderLayout.SOUTH);
+        Mybutton tmpButton = new Mybutton("Valider", Color.WHITE, Color.ORANGE);
+        tmpButton.addActionListener(e->{
+            if(true ){ // insert a condition to make sure that the data is valid
+                NotificationPage locationSuccess = new NotificationPage("Operation validée", "Le scooter a bien été loué",1);
+                this.dispose();
+                locationSuccess.setResizable(false);
+                locationSuccess.show();
+            }else{
+                this.dispose();
+                NotificationPage failed = new NotificationPage("Connection Failed","Le scooter n'a bien été loué ! ",2);
+                failed.setResizable(false);
+                failed.show();
+            }
+        });
+        this.add(tmp1);
+        this.add(tmpButton,BorderLayout.SOUTH);
     }
+ 
 }
+
