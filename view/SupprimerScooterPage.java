@@ -1,38 +1,35 @@
 package view;
+
 import view.components.*;
 import javax.swing.*;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.Color;
-import java.awt.Font;
-import java.awt.GridLayout;
 import java.awt.LayoutManager;
+import model.Engine;
 
 
 public class SupprimerScooterPage extends Myframe {
-    public SupprimerScooterPage (){
+    public SupprimerScooterPage (ParcdeScooter prevPage , Engine engine){
         super("Supprimer un scooter",400,400);
         this.setLayout(new BorderLayout());
         this.setResizable(false);
-        this.add(new HeadingText("please fill in information"),BorderLayout.NORTH);
+        this.add(new HeadingText("Information requise"),BorderLayout.NORTH);
         JPanel tmp = new JPanel();
         LayoutManager layout = new FlowLayout(FlowLayout.CENTER, 20,5);
         tmp.setLayout(layout);
-        MytextField IDField = new MytextField("ID", 20, 200,false);
+        MytextField IDField = new MytextField("ID", 20, 200,true);
         tmp.add(IDField);
         this.add(tmp,BorderLayout.CENTER);
         Mybutton tmpButton = new Mybutton("Valider", Color.WHITE, Color.RED);
-        tmpButton.addActionListener(e->{
-            if(IDField.getText().equals("123")){ //condition pour voir si le scooter avec l'id donnée existe dans le parc - à faire
-                NotificationPage supprimerSuccess = new NotificationPage("Operation validée", "Le scooter a bien été supprimé",1);
-                this.dispose();
-                supprimerSuccess.setResizable(false);
-                supprimerSuccess.show();
+        tmpButton.addActionListener(event->{
+            if(IDField.getText().equals("") || IDField.getText().equals("ID")){
+                NotificationPage notification = new NotificationPage("Erreur : Veuillez saisir toutes les informations requises");
             }else{
-                NotificationPage supprimerFailed = new NotificationPage("Operation non validée", "Le scooter n'existe pas dans le parc",2);
+                String message  = engine.supprimerScooter(Integer.parseInt(IDField.getText()) );
+                NotificationPage notification = new NotificationPage(message);
+                prevPage.updateData(engine);
                 this.dispose();
-                supprimerFailed.setResizable(false);
-                supprimerFailed.show();
             }
         });
         this.add(tmpButton,BorderLayout.SOUTH);

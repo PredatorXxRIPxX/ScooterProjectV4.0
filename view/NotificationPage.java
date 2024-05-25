@@ -5,15 +5,10 @@ import javax.swing.*;
 import java.awt.*;
 
 public class NotificationPage extends Myframe{
-    public NotificationPage(String title, String message, int notificationStatus) {
-        super(title, 150, 800);
+    public NotificationPage(String message) {
+        super("Notification", 150, 1000);
         JLabel notificationMessage = new JLabel(message);
         notificationMessage.setFont(new Font("Arial", Font.BOLD, 14));
-        if (notificationStatus == 1){
-            notificationMessage.setForeground(Color.GREEN);
-        }else{
-            notificationMessage.setForeground(Color.RED);
-        }
 
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
@@ -25,6 +20,7 @@ public class NotificationPage extends Myframe{
         add(panel, BorderLayout.CENTER);
 
         setLocationRelativeTo(null); 
+        setResizable(false);
         setVisible(true);
     }
 }

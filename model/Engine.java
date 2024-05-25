@@ -1,129 +1,77 @@
 package model;
 import java.time.LocalDate;
-import java.util.Scanner;
 import java.util.Vector;
 
 public class Engine {
     public Parc parc;
 
-    Scanner input = new Scanner(System.in);
-
-    public Engine(Parc parc){
+    public Engine (Parc parc){
         this.parc = parc;
     }
 
-    public void louerScooter(Client client,int idScooter){
-        Scooter scooter =parc.getScooterById(idScooter);
-        System.out.println("Donner votre date de debut:");
-        String tempo = input.next();
-        LocalDate date_debut = LocalDate.parse(tempo);
-        System.out.println("Donner votre date de fin:");
-        tempo = input.next();
-        LocalDate date_fin = LocalDate.parse(tempo);
-        try {
-            if(scooter!=null||scooter.isFree(date_debut, date_fin)){
-                parc.louerScooter(client, scooter, date_debut, date_fin);
-            }else{
-                System.out.println("ce n'exist pas :(");
-            }    
-        } catch (Exception e) {
-            System.out.println("error: "+e);
-        }
-        
-    }
-
-    public void ajouterScooter(String model , float kilometrage){
-        parc.setListScotter(new Scooter(model, kilometrage));
-    }
-
-    public void supprimerScooter(int idScooter){
-        Vector<Scooter> liScooters = parc.getListscooter();
-        Vector<Scooter> tmp = new Vector<>();
-        for(Scooter element:liScooters){
-            if(element.getId() == idScooter){
-                continue;
-            }else{
-                tmp.add(element);
-            }
-        }
-        parc.setListscooter(tmp);
-    }
-
-    public void retourScooter(Client client,float kilometrage,int idScooter,LocalDate date_retour){
-        try {
-            parc.locations.forEach(element ->{
-                if(element.getLocation().getId()==idScooter){
-                    element.setRetour(kilometrage, date_retour, client);
-                    parc.listRetour.add(new Retoure(client, date_retour, kilometrage, element));
-                    element.getLocation().kilometrage = kilometrage;
-                    element.getLocation().listLocation.forEach(e->{
-                        if(e.isIntersect(e.getRetour().getDate_retour(), e.getRetour().getDate_retour())){
-                            e.getLocation().listLocation.remove(e.getLocation().listLocation.indexOf(e));
-                        }
-                    });
-                }
-            });
-        } catch (Exception e) {
-            System.out.println("error: "+e);
-        }
-    }
-
-
-    public void etatScooter(int idScooter){
-        Scooter scooter = parc.getScooterById(idScooter);
-        if(scooter==null){
-            System.out.println("ce scooter n'exist pas :( ");
+    public String ajouterNewScooter (String modele , float kilometrage){
+        if (parc.getListeScooters().size() < parc.getNbrMaxScooters()){
+            parc.getListeScooters().add(new Scooter(modele, kilometrage));
+            return "Succès : Le scooter a été ajouté";
         }else{
-            System.out.println("scooter trouver :)");
-            System.out.println("Id : "+scooter.getId());
-            System.out.println("model: "+scooter.getModele());
-            System.out.println("kilometrage: "+ scooter.getKilometrage());
-            System.out.println("Etat: "+(scooter.listLocation.isEmpty()? "Disponible":"Non Disponible"));
+            return "Erreur : Il n'est pas possible d'ajouter ce scooter au parc, et il n'y a plus de places!";
         }
-
-    }
-    public void etatParcEnsembleScooter(){
-        Vector<Scooter> scooterList = parc.getListscooter();
-        System.out.println("");
-        for(Scooter scooter:scooterList){
-            System.out.println("Id : "+scooter.getId());
-            System.out.println("Model: "+scooter.getModele());
-            System.out.println("kilometrage: "+scooter.getKilometrage());
-            System.out.println("etat: "+(scooter.listLocation.isEmpty()?"Disponible":"Non Disponible"));
-            System.out.println("--------------------------------------------------------------------------");
-        }
-
     }
 
-    public void parcDesScooter(){
-        System.out.println("Nombre total des scooter est : "+parc.getNbrMaxScooters());
-        System.out.println("-----------------------------------------------------------------");
-        System.out.println("Les scooter en location sont: ");
-        Vector<Scooter> parcScooter = parc.getListscooter();
-        for(Scooter scooter : parcScooter){
-            if(scooter.listLocation.size()>0){
-                System.out.println("scooter : "+scooter.getId());
+    public String supprimerScooter (int id){
+        Scooter scotSupp = parc.getScooterById(id);
+        if (scotSupp != null){
+            if (scotSupp.isFreeInDate(LocalDate.now(), LocalDate.now())){
+                if (scotSupp.isFreeAlways()){
+                    parc.getListeScooters().remove(scotSupp);
+                    return "Succès : Le scooter "+id+" a été supprimé";
+                }else{
+                    return"Erreur : Le scooter "+id+" a des reservations dans le future, ce n'est pas possible de le supprimé";
+                }
+            }else{
+                return "Le scooter "+id+" est actuellement en location, ce n'est pas possible de le supprimé";
             }
+            
+        }else{
+            return "Erreur : Le scooter "+id+" n'existe pas dans le parc";
         }
-        System.out.println("----------------------------------------------");
-        System.out.println("en total :"+parc.getNbrScootersLoues());
-
-        System.out.println("Les scooter disponibles sont: ");
-        for(Scooter scooter:parcScooter){
-            if(!scooter.listLocation.isEmpty()){
-                System.out.println("scooter: "+scooter.getId());
-            }
-        }
-        System.out.println("--------------------------------------------------------------");
-        System.out.println("en total :"+ parc.getNbrScootersDisponibles());
-
-        System.out.println("Le kilometrage moyenne: ");
-        float tmp =0;
-        for(Scooter scooter : parcScooter){
-            tmp+= scooter.getKilometrage();
-        }
-        System.out.println(tmp);
-
     }
-    
+
+    public boolean louerScooter (String nomClient , String prenomClient , String telephoneClient , LocalDate dateDebutLocation , LocalDate dateFinLocation , Scooter scooter){
+        if (scooter.isFreeInDate(dateDebutLocation, dateFinLocation)){
+            Client client = parc.getClientByPhone(telephoneClient);
+            if (client == null){
+                client = new Client(nomClient, prenomClient, telephoneClient);
+                parc.ajouterClient(client);
+            }
+            Location newLocation = new Location( client, scooter, dateDebutLocation ,  dateFinLocation);
+
+            client.addNewLocation(newLocation);
+            scooter.addNewLocation(newLocation);
+            parc.addNewLocation(newLocation);
+
+            return true;
+
+        }else{
+            return false;
+        }
+    }
+
+    public boolean retournerScooter(Client client,Location location,LocalDate datedebut,LocalDate datefin,Scooter scooter,String kilometrage){
+        try {
+            client.getListLoc().remove(location);
+            parc.getListeLocations().remove(location);
+            scooter.setKilometrage(Float.parseFloat(kilometrage));
+            scooter.getListeLocations().remove(location);
+            Vector<Retoure> listRetoure = parc.getListeRetours();
+            listRetoure.add(new Retoure(client, datefin, scooter.getKilometrage(), location));
+            parc.setListeRetours(listRetoure);
+            if(client.getListLoc().size()==0){
+                parc.getListeClients().remove(client);
+            }
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }

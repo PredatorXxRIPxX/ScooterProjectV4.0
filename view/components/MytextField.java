@@ -9,9 +9,27 @@ import java.awt.event.KeyEvent;
 
 public class MytextField extends JTextField implements ActionListener{
 
+    public String getValue(){
+        return this.getText();
+    }
 
     public MytextField(String text, int height, int width, boolean isNumbers) {
         super(text);
+        setPreferredSize(new Dimension(width, height));
+        if (isNumbers) {
+            addKeyListener(new KeyAdapter() {
+                @Override
+                public void keyTyped(KeyEvent e) {
+                    char c = e.getKeyChar();
+                    if (!Character.isDigit(c)) {
+                        e.consume();
+                    }
+                }
+            });
+        }
+        this.addActionListener(this);
+    }
+    public MytextField(int height,int width,boolean isNumbers){
         setPreferredSize(new Dimension(width, height));
         if (isNumbers) {
             addKeyListener(new KeyAdapter() {
@@ -32,6 +50,10 @@ public class MytextField extends JTextField implements ActionListener{
         this.addActionListener(this);
         setPreferredSize(new Dimension(width, height));
     
+    }
+
+    public void resetTextField (){
+        super.setText("");
     }
 
     @Override
