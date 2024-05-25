@@ -7,6 +7,8 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -31,6 +33,22 @@ public class HomePage extends Myframe {
         heading.add(header, BorderLayout.CENTER);
         heading.setBackground(Color.GRAY);
                 
+        Mybutton savebtn = new Mybutton("Sauvgarder", Color.white, Color.GREEN);
+        savebtn.setPreferredSize(new Dimension(200,40));
+        savebtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                System.out.println("save");
+            }
+        });
+        Mybutton restorebtn = new Mybutton("restorer", Color.white, Color.blue);
+        restorebtn.setPreferredSize(new Dimension(200,40));
+        restorebtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                System.out.println("restore");
+            }
+        });
         JPanel footer = new JPanel(new FlowLayout());
         footer.setBorder(BorderFactory.createEmptyBorder(20, 50, 20, 50));
         Mybutton exitBtn = new Mybutton("Quittez le Programme", Color.white, Color.RED);
@@ -40,9 +58,10 @@ public class HomePage extends Myframe {
                 System.exit(0);
             }
         });
+        footer.add(savebtn);
         exitBtn.setPreferredSize(new Dimension(200,40));
         footer.add(exitBtn);  
-        
+        footer.add(restorebtn);
         JPanel mainShow = new JPanel();
         mainShow.setSize(1200, 500);
         mainShow.setLayout(new FlowLayout());
@@ -76,6 +95,8 @@ public class HomePage extends Myframe {
             }
         });
         mainShow.add(afficherParc);
+
+        
 
         this.add(mainShow,BorderLayout.CENTER);
         this.add(footer,BorderLayout.SOUTH);
